@@ -15,33 +15,31 @@
 # of the new char exceeds the historical max count (from a previous window
 # that covers a valid substring).
 
-# w e do not need the accurate max count of the current window;
+# we do not need the accurate max count of the current window;
 # we only care if the max count exceeds the historical max count; and that can
 # only happen because of the new char.
 
 
 def length_of_longest_substring(s, k):
-    if not s or k < 0:
+    if not s:
         return 0
 
     start, end = 0, 0
-    freq_map = [0 for _ in range(26)]
+    freq_map = [0] * 26
+    longest_repeat = 0
     res = 0
-    longest_repeats = 0
-
     while end < len(s):
         curr = s[end]
-        index = ord(curr) - ord('a')
-        freq_map[index] += 1
-        longest_repeats = max(longest_repeats, freq_map[index])
-        if end - start + 1 - longest_repeats <= k:
-            res = max(res, end - start + 1)
-        else:
-            freq_map[ord(s[start]) - ord('a')] -= 1
-            start += 1
-            longest_repeats -= 1
-        end += 1
+        idx = ord(curr) - ord('A')
+        freq_map[idx] += 1
+        longest_repeat = max(longest_repeat, freq_map[idx])
 
+        if end - start + 1 - longest_repeat > k:
+            freq_map[ord(s[start]) - ord('A')] -= 1
+            start += 1
+        else:
+            res = max(res, end - start + 1)
+        end += 1
     return res
 
 

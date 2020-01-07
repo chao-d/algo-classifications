@@ -1,6 +1,8 @@
-# Given an array of positive numbers and a positive number ‘k’, 
+# Given an array of positive numbers and a positive number ‘k’,
 # find the maximum sum of any contiguous subarray of size ‘k’.
 
+
+# start moving after end - start + 1 == k
 def max_sub_array_of_size_k(k, arr):
     if k <= 0 or not arr or len(arr) < k:
         return -1

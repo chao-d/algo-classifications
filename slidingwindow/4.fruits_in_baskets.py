@@ -10,6 +10,7 @@
 # Write a function to return the maximum number of fruits in both the baskets.
 
 
+# this is the same as problem 3 except this problem replaces k with 2
 def fruits_into_baskets(fruits):
     if not fruits:
         return 0
@@ -22,13 +23,15 @@ def fruits_into_baskets(fruits):
         if curr not in freq_map:
             freq_map[curr] = 0
         freq_map[curr] += 1
-        max_len = max(max_len, end - start + 1)
-        end += 1
-        while len(freq_map) > 2:
-            freq_map[fruits[start]] -= 1
-            if freq_map[fruits[start]] == 0:
-                del freq_map[fruits[start]]
+        if len(freq_map) <= 2:
+            max_len = max(max_len, end - start + 1)
+        else:
+            while start < end:
+                freq_map[fruits[start]] -= 1
+                if freq_map[fruits[start]] == 0:
+                    del freq_map[fruits[start]]
+                    start += 1
+                    break
                 start += 1
-                break
-            start += 1
+        end += 1
     return max_len
