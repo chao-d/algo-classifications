@@ -2,47 +2,33 @@
 # string which has all the characters of the given pattern.
 
 
-def find_substring(s, p):
-    if not s or not p or len(p) > len(s):
-        return ""
+def find_substring(s, t):
+    freq_map = [0] * 256
+    for c in t:
+        freq_map[ord(c)] += 1
 
-    # if p == s:
-    #     return p
-
-    freq_map = {}
-    for ch in p:
-        if ch not in freq_map:
-            freq_map[ch] = 0
-        freq_map[ch] += 1
-
-    count = 0
     start, end = 0, 0
-    min_len = len(s) + 1
-    res = ""
-    while end < len(s):
-        curr = s[end]
-        if curr not in freq_map:
-            end += 1
-            continue
+    count = 0
+    res, min_len = "", len(s) + 1
 
-        freq_map[curr] -= 1
-        if freq_map[curr] == 0:
+    while end < len(s):
+        index = ord(s[end])
+        freq_map[index] -= 1
+        if freq_map[index] >= 0:
             count += 1
-        if count == len(freq_map):
-            while start <= end:
-                prev = s[start]
-                if prev in freq_map:
-                    freq_map[prev] += 1
-                    if freq_map[prev] == 1:
-                        if min_len > end - start + 1:
-                            min_len = end - start + 1
-                            res = s[start: end + 1]
-                        start += 1
-                        count -= 1
-                        break
+
+        while start <= end and count == len(t):
+            if min_len > end - start + 1:
+                min_len = end - start + 1
+                res = s[start: end + 1]
+            index0 = ord(s[start])
+            freq_map[index0] += 1
+            if freq_map[index0] > 0:
+                count -= 1
                 start += 1
+                break
+            start += 1
         end += 1
-    print(min_len)
     return res
 
 

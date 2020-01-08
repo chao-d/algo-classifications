@@ -5,43 +5,44 @@
 
 
 def find_word_concatenation(s, words):
+    res = []
+    if not words or not s:
+        return res
+
     words_dict = {}
     for w in words:
         if w not in words_dict:
             words_dict[w] = 0
         words_dict[w] += 1
 
-    origin_dict = words_dict.copy()
-
     word_len = len(words[0])
-    start, end = 0, 0
-    count = 0
-    res = []
-    while end < len(s):
-        curr = s[end: end + word_len]
-        if curr not in words_dict:
-            end += 1
-            start = end
-            count = 0
-            words_dict = origin_dict.copy()
-            continue
-        words_dict[curr] -= 1
-        if words_dict[curr] == 0:
-            count += 1
-            if count == len(words_dict):
-                res.append(start)
-                words_dict[s[start: start + word_len]] += 1
-                count -= 1
+    words_len = len(words)
+    window_len = word_len * words_len
+
+    for i in range(word_len):
+        freq = words_dict.copy()
+        count = 0
+        start, end = i, i
+        # not traverse the whole list but m / l
+        while end <= len(s) - word_len:
+            curr = s[end: end + word_len]
+            if curr in freq:
+                freq[curr] -= 1
+                if freq[curr] >= 0:
+                    count += 1
+                if count == words_len:
+                    res.append(start)
+
+            if end - start >= window_len - word_len:
+                prev = s[start: start + word_len]
+                if prev in freq:
+                    freq[prev] += 1
+                    if freq[prev] >= 1:
+                        count -= 1
                 start += word_len
-        elif words_dict[curr] < 0:
-            while start < end and s[start: start + word_len] != curr:
-                words_dict[s[start: start + word_len]] += 1
-                if words_dict[s[start: start + word_len]] == 1:
-                    count -= 1
-                start += word_len
-            words_dict[curr] += 1
-            start += word_len
-        end += word_len
+
+            end += word_len
+
     return res
 
 
